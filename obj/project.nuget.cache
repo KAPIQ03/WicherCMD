@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "7hLOCmadKdRJVhj8PnjjYErsK0ejRPmMxrrGH/NQ0f+qTHrxdkPoXUF0LNQgbqFvwanhyGzrrziUSmlPY9EjsA==",
+  "success": true,
+  "projectFilePath": "D:\\STUDIA\\Podstawy Programowania\\Gra\\Gra.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kapik\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,17 @@
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Gra.exe
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Gra.deps.json
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Gra.runtimeconfig.json
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Gra.dll
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Gra.pdb
+D:\STUDIA\Podstawy Programowania\Gra\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.csproj.AssemblyReference.cache
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.GeneratedMSBuildEditorConfig.editorconfig
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.AssemblyInfoInputs.cache
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.AssemblyInfo.cs
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.csproj.CoreCompileInputs.cache
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.csproj.CopyComplete
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.dll
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\refint\Gra.dll
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.pdb
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.genruntimeconfig.cache
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\ref\Gra.dll

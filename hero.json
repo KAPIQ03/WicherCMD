@@ -1,0 +1,12 @@
+{
+  "Name": "Kacper",
+  "Speed": 3,
+  "Strength": 3,
+  "Magic": 3,
+  "Alchemy": 2,
+  "HP": 100,
+  "XP": 0,
+  "Storage": 10,
+  "Gold": 10,
+  "Level": 1
+}
