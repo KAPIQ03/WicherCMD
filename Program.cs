@@ -1,157 +1,11 @@
 ﻿using System;
 using System.IO;
+using Gra.Klasy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Windows;
-// using System.Text.Json;
 
 namespace projekt
 {
-  public class Monster
-  {
-    public string? Name;
-    public int Strength;
-    public int Speed;
-    public int HP;
-    private int aktywnaPozycjaMenu = 0;
-    private string[] pozycjeMenu = { "Atak", "Znak", "Eliksir", "Ucieczka" };
-
-    public Monster(string monster)
-    {
-      string data = File.ReadAllText($"./Monsters/{monster}.json");
-      JObject load = JObject.Parse(data);
-      Init((int)load["Strength"], (int)load["Speed"], (int)load["HP"], (string)load["Name"]);
-    }
-    private void Init(int strength, int speed, int hp, string name)
-    {
-      this.Name = name;
-      this.Strength = strength;
-      this.Speed = speed;
-      this.HP = hp;
-    }
-
-    public bool Walka()
-    {
-      Console.CursorVisible = false;
-      bool wyjscie = true;
-
-      while (wyjscie)
-      {
-        PokazMenu();
-        WybieranieOpcji();
-        wyjscie = UruchomOpcje();
-      }
-      return wyjscie;
-    }
-    private void PokazMenu()
-    {
-      Console.BackgroundColor = ConsoleColor.Black;
-      Console.Clear();
-      Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine($"Napotykasz potwora: {Name}");
-      Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine();
-      for (int i = 0; i < pozycjeMenu.Length; i++)
-      {
-        if (i == aktywnaPozycjaMenu)
-        {
-          Console.BackgroundColor = ConsoleColor.DarkGray;
-          Console.ForegroundColor = ConsoleColor.Black;
-          Console.WriteLine("\t⚔️  {0,-10} ", pozycjeMenu[i], pozycjeMenu[i].Length);
-          Console.BackgroundColor = ConsoleColor.Black;
-          Console.ForegroundColor = ConsoleColor.White;
-        }
-        else
-        {
-          Console.WriteLine("\t" + pozycjeMenu[i]);
-        }
-      }
-    }
-    private void WybieranieOpcji()
-    {
-      do
-      {
-        ConsoleKeyInfo klawisz = Console.ReadKey();
-        if (klawisz.Key == ConsoleKey.UpArrow)
-        {
-          aktywnaPozycjaMenu = (aktywnaPozycjaMenu > 0) ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
-          PokazMenu();
-        }
-        else if (klawisz.Key == ConsoleKey.DownArrow)
-        {
-          aktywnaPozycjaMenu = (aktywnaPozycjaMenu + 1) % pozycjeMenu.Length;
-          PokazMenu();
-        }
-        else if (klawisz.Key == ConsoleKey.Enter)
-        {
-          break;
-        }
-      } while (true);
-    }
-    private bool UruchomOpcje()
-    {
-      switch (aktywnaPozycjaMenu)
-      {
-        case 0: Console.Clear(); Console.WriteLine("Atak"); Console.ReadKey(); break;
-        case 1: Console.Clear(); Console.WriteLine("Znak"); Console.ReadKey(); break;
-        case 2: Console.Clear(); Console.WriteLine("Eliksir"); Console.ReadKey(); break;
-        case 3: Console.Clear(); Console.WriteLine("Ucieczka"); Console.ReadKey(); return false; break;
-      }
-      return true;
-    }
-  }
-  public class Hero
-  {
-    public string? Name;
-    public int Strength;
-    public int Speed;
-    public int Magic;
-    public int Alchemy;
-    public int HP;
-    public int XP;
-    public int Gold;
-    public int Level;
-    public int Storage;
-
-    public Hero(JObject load)
-    {
-      JObject Load = load;
-      Init((int)Load["Strength"], (int)Load["Speed"], (int)Load["Magic"], (int)Load["Alchemy"], (int)Load["HP"], (int)Load["XP"], (int)Load["Gold"], (int)Load["Level"], (int)Load["Storage"], (string)Load["Name"]);
-    }
-    private void Init(int strength, int speed, int magic, int alchemy, int hp, int xp, int gold, int level, int storage, string name)
-    {
-      this.Name = name;
-      this.Strength = strength;
-      this.Speed = speed;
-      this.Magic = magic;
-      this.Alchemy = alchemy;
-      this.HP = hp;
-      this.XP = xp;
-      this.Gold = gold;
-      this.Level = level;
-      this.Storage = storage;
-    }
-
-    // public void UpStrength() { this.Strength += 5; this.HP += 5; }
-    // public void UpDexterity() { this.Dexterity += 5; }
-    // public void UpIntelligence() { this.Intelligence += 5; this.MP += (3 * this.Intelligence); }
-    public static void Save(JObject hero, Hero hero1)
-    {
-      JObject Hero = hero;
-      Hero["Strength"] = hero1.Strength;
-      Hero["Speed"] = hero1.Speed;
-      Hero["Magic"] = hero1.Magic;
-      Hero["Alchemy"] = hero1.Alchemy;
-      Hero["HP"] = hero1.HP;
-      Hero["XP"] = hero1.XP;
-      Hero["Storage"] = hero1.Storage;
-      Hero["Gold"] = hero1.Gold;
-      Hero["Level"] = hero1.Level;
-      Hero["Name"] = hero1.Name;
-
-      File.WriteAllText("./hero.json", Hero.ToString());
-    }
-  }
   class Program
   {
     static void Main(string[] args)
@@ -160,10 +14,6 @@ namespace projekt
       JObject load = JObject.Parse(data);
 
       Hero hero = new Hero(load);
-
-      //TODO: Wprowadzenie
-
-      //Samouczek
 
       if (hero.Name == "")
       {
@@ -181,7 +31,7 @@ namespace projekt
       Console.Clear();
       Console.WriteLine("Jak masz na imię podróżniku?");
       Console.Write("-> ");
-      string nazwa = Console.ReadLine();
+      string? nazwa = Console.ReadLine();
       hero.Name = (nazwa.Length > 1) ? nazwa : "V";
       int pktStart = 3;
 
@@ -211,88 +61,49 @@ namespace projekt
 
       Console.Clear();
       string tutorial = $"Wieśniak:\n\n\tWitaj {hero.Name},\n\tW naszej wiosce zalęgły się ghule, czy mógłbyś się ich pozbyć? (Samouczek)";
-      bool wybor = Wybor(tutorial);
+
+      MenuDialog menuDialog = new MenuDialog();
+      bool wybor = menuDialog.Wybor(tutorial);
 
       if (wybor)
       {
-        Console.Clear();
-        Console.WriteLine("//Samouczek");
-
-        Monster ghul = new Monster("ghul");
-
+        MonsterTutorial ghul = new MonsterTutorial();
+        NPC("W takim razie chodź za mną... ", "Wieśniak");
+        Narrator("Wieśniak prowadzi Cię do stodoły na skraju wsi.");
+        Gracz("Zajmę się tym. Schowaj się w jakiejś chacie i ostrzeż ludzi.");
+        Narrator("Wieśniak kiwa głową i odchodzi.\nOstrożnie obchodzisz stodołę, w hałdzie gnoju za nią widać niewielkie gniazdo, w którym siedzi jeden Ghul.");
+        Narrator("Widzisz jak potwór podnosi łeb i wietrzy Twój zapach. Susem wyskakuje z gniazda i zaczyna się do Ciebie zbliżać.\nSięgasz po miecz...");
         ghul.Walka();
-
       }
       else
       {
         Console.WriteLine("//Wypierdalaj na szlak odmieńcu!");
       }
+
     }
-    public static bool Wybor(string tutorial)
+    public static void NPC(string text, string nazwa)
     {
-      Console.CursorVisible = false;
-      int aktywnaPozycjaMenu = 0;
-      string[] pozycjeMenu = { "Tak", "Nie" };
-      while (true)
-      {
-        PokazMenu(aktywnaPozycjaMenu, pozycjeMenu, tutorial);
-        WybieranieOpcji(aktywnaPozycjaMenu, pozycjeMenu, tutorial);
-        return UruchomOpcje(aktywnaPozycjaMenu);
-      }
-    }
-    static void PokazMenu(int aktywnaPozycjaMenu, string[] pozycjeMenu, string tutorial)
-    {
-      Console.BackgroundColor = ConsoleColor.Black;
       Console.Clear();
       Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine(tutorial);
+      Console.WriteLine($"{nazwa}:\n\t{text}");
       Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine();
-      for (int i = 0; i < pozycjeMenu.Length; i++)
-      {
-        if (i == aktywnaPozycjaMenu)
-        {
-          Console.BackgroundColor = ConsoleColor.DarkGray;
-          Console.ForegroundColor = ConsoleColor.Black;
-          Console.WriteLine("\t⚔️  {0,-10} ", pozycjeMenu[i], pozycjeMenu[i].Length);
-          Console.BackgroundColor = ConsoleColor.Black;
-          Console.ForegroundColor = ConsoleColor.White;
-        }
-        else
-        {
-          Console.WriteLine("\t" + pozycjeMenu[i]);
-        }
-      }
+      Console.ReadKey();
     }
-    static void WybieranieOpcji(int aktywnaPozycjaMenu, string[] pozycjeMenu, string tutorial)
+    public static void Narrator(string text)
     {
-      do
-      {
-        ConsoleKeyInfo klawisz = Console.ReadKey();
-        if (klawisz.Key == ConsoleKey.UpArrow)
-        {
-          aktywnaPozycjaMenu = (aktywnaPozycjaMenu > 0) ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
-          PokazMenu(aktywnaPozycjaMenu, pozycjeMenu, tutorial);
-        }
-        else if (klawisz.Key == ConsoleKey.DownArrow)
-        {
-          aktywnaPozycjaMenu = (aktywnaPozycjaMenu + 1) % pozycjeMenu.Length;
-          PokazMenu(aktywnaPozycjaMenu, pozycjeMenu, tutorial);
-        }
-        else if (klawisz.Key == ConsoleKey.Enter)
-        {
-          break;
-        }
-      } while (true);
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.DarkGray;
+      Console.WriteLine($"\n{text}");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.ReadKey();
     }
-    static bool UruchomOpcje(int aktywnaPozycjaMenu)
+    public static void Gracz(string text)
     {
-      switch (aktywnaPozycjaMenu)
-      {
-        case 0: return true;
-        case 1: return false;
-        default: return false;
-      }
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.Green;
+      Console.WriteLine($"Ty:\n\t{text}");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.ReadKey();
     }
   }
 }
