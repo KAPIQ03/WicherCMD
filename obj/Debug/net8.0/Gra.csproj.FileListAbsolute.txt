@@ -15,3 +15,4 @@ D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\refint\Gra.dll
 D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.pdb
 D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.genruntimeconfig.cache
 D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\ref\Gra.dll
+D:\STUDIA\Podstawy Programowania\Gra\obj\Debug\net8.0\Gra.sourcelink.json

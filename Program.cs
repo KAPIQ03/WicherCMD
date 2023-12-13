@@ -7,6 +7,99 @@ using System.Windows;
 
 namespace projekt
 {
+  public class Monster
+  {
+    public string? Name;
+    public int Strength;
+    public int Speed;
+    public int HP;
+    private int aktywnaPozycjaMenu = 0;
+    private string[] pozycjeMenu = { "Atak", "Znak", "Eliksir", "Ucieczka" };
+
+    public Monster(string monster)
+    {
+      string data = File.ReadAllText($"./Monsters/{monster}.json");
+      JObject load = JObject.Parse(data);
+      Init((int)load["Strength"], (int)load["Speed"], (int)load["HP"], (string)load["Name"]);
+    }
+    private void Init(int strength, int speed, int hp, string name)
+    {
+      this.Name = name;
+      this.Strength = strength;
+      this.Speed = speed;
+      this.HP = hp;
+    }
+
+    public bool Walka()
+    {
+      Console.CursorVisible = false;
+      bool wyjscie = true;
+
+      while (wyjscie)
+      {
+        PokazMenu();
+        WybieranieOpcji();
+        wyjscie = UruchomOpcje();
+      }
+      return wyjscie;
+    }
+    private void PokazMenu()
+    {
+      Console.BackgroundColor = ConsoleColor.Black;
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.Yellow;
+      Console.WriteLine($"Napotykasz potwora: {Name}");
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine();
+      for (int i = 0; i < pozycjeMenu.Length; i++)
+      {
+        if (i == aktywnaPozycjaMenu)
+        {
+          Console.BackgroundColor = ConsoleColor.DarkGray;
+          Console.ForegroundColor = ConsoleColor.Black;
+          Console.WriteLine("\t⚔️  {0,-10} ", pozycjeMenu[i], pozycjeMenu[i].Length);
+          Console.BackgroundColor = ConsoleColor.Black;
+          Console.ForegroundColor = ConsoleColor.White;
+        }
+        else
+        {
+          Console.WriteLine("\t" + pozycjeMenu[i]);
+        }
+      }
+    }
+    private void WybieranieOpcji()
+    {
+      do
+      {
+        ConsoleKeyInfo klawisz = Console.ReadKey();
+        if (klawisz.Key == ConsoleKey.UpArrow)
+        {
+          aktywnaPozycjaMenu = (aktywnaPozycjaMenu > 0) ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
+          PokazMenu();
+        }
+        else if (klawisz.Key == ConsoleKey.DownArrow)
+        {
+          aktywnaPozycjaMenu = (aktywnaPozycjaMenu + 1) % pozycjeMenu.Length;
+          PokazMenu();
+        }
+        else if (klawisz.Key == ConsoleKey.Enter)
+        {
+          break;
+        }
+      } while (true);
+    }
+    private bool UruchomOpcje()
+    {
+      switch (aktywnaPozycjaMenu)
+      {
+        case 0: Console.Clear(); Console.WriteLine("Atak"); Console.ReadKey(); break;
+        case 1: Console.Clear(); Console.WriteLine("Znak"); Console.ReadKey(); break;
+        case 2: Console.Clear(); Console.WriteLine("Eliksir"); Console.ReadKey(); break;
+        case 3: Console.Clear(); Console.WriteLine("Ucieczka"); Console.ReadKey(); return false; break;
+      }
+      return true;
+    }
+  }
   public class Hero
   {
     public string? Name;
@@ -68,23 +161,20 @@ namespace projekt
 
       Hero hero = new Hero(load);
 
+      //TODO: Wprowadzenie
+
+      //Samouczek
+
       if (hero.Name == "")
       {
         NewGame(hero);
       }
 
-      //TODO: Wprowadzenie
-
-
-      // Console.WriteLine($"Wieśniak: Witaj {hero.Name}, W naszej wiosce zalęgły się ghule, Czy mógłbyś je dla nas pokonać?");
-
-      //Samouczek
-
       //TODO: Wybór akcji zapentlony
 
       //TODO: SYSTEM WALKI
 
-      Hero.Save(load, hero);
+      //Hero.Save(load, hero);
     }
     public static void NewGame(Hero hero)
     {
@@ -92,45 +182,50 @@ namespace projekt
       Console.WriteLine("Jak masz na imię podróżniku?");
       Console.Write("-> ");
       string nazwa = Console.ReadLine();
-      hero.Name = nazwa;
-      int i = 3;
+      hero.Name = (nazwa.Length > 1) ? nazwa : "V";
+      int pktStart = 3;
 
       Console.Clear();
-      Console.WriteLine($"Rozdziel punkty umiejętności: {i}/3");
+      Console.WriteLine($"Rozdziel punkty umiejętności: {pktStart}/3");
       Console.WriteLine($"1. Siła {hero.Strength}\n2. Szybkość {hero.Speed}\n3. Magia {hero.Magic}\n4. Alchemia {hero.Alchemy}\n");
+      Console.Write("-> ");
 
-      while (i > 0)
+      while (pktStart > 0)
       {
-        char option = char.Parse(Console.ReadLine());
+        string? option = Console.ReadLine();
         switch (option)
         {
-          case '1': hero.Strength = hero.Strength + 1; i--; break;
-          case '2': hero.Speed = hero.Speed + 1; i--; break;
-          case '3': hero.Magic = hero.Magic + 1; i--; break;
-          case '4': hero.Alchemy = hero.Alchemy + 1; i--; break;
-          default: break;
+          case "1": hero.Strength = hero.Strength + 1; pktStart--; break;
+          case "2": hero.Speed = hero.Speed + 1; pktStart--; break;
+          case "3": hero.Magic = hero.Magic + 1; pktStart--; break;
+          case "4": hero.Alchemy = hero.Alchemy + 1; pktStart--; break;
+          default: Console.WriteLine("\nUmiesz liczyć do 4?"); Console.ReadKey(); break;
         }
         Console.Clear();
-        Console.WriteLine($"Rozdziel punkty umiejętności: {i}/3");
+        Console.WriteLine($"Rozdziel punkty umiejętności: {pktStart}/3");
         Console.WriteLine($"1. Siła {hero.Strength}\n2. Szybkość {hero.Speed}\n3. Magia {hero.Magic}\n4. Alchemia {hero.Alchemy}\n");
-        if (i > 0) Console.Write("-> ");
+        if (pktStart > 0) Console.Write("-> ");
       }
       Console.WriteLine("Aby kontynuować wciśnij przycisk.");
       Console.ReadKey();
 
       Console.Clear();
-
-      Console.SetCursorPosition(12, 4);
-      string tutorial = $"Witaj {hero.Name},\nW naszej wiosce zalęgły się ghule, czy mógłbyś się ich pozbyć?";
+      string tutorial = $"Wieśniak:\n\n\tWitaj {hero.Name},\n\tW naszej wiosce zalęgły się ghule, czy mógłbyś się ich pozbyć? (Samouczek)";
       bool wybor = Wybor(tutorial);
 
       if (wybor)
       {
+        Console.Clear();
         Console.WriteLine("//Samouczek");
+
+        Monster ghul = new Monster("ghul");
+
+        ghul.Walka();
+
       }
       else
       {
-        Console.WriteLine("//Bez samouczka");
+        Console.WriteLine("//Wypierdalaj na szlak odmieńcu!");
       }
     }
     public static bool Wybor(string tutorial)
@@ -149,22 +244,23 @@ namespace projekt
     {
       Console.BackgroundColor = ConsoleColor.Black;
       Console.Clear();
-      Console.ForegroundColor = ConsoleColor.White;
+      Console.ForegroundColor = ConsoleColor.Yellow;
       Console.WriteLine(tutorial);
+      Console.ForegroundColor = ConsoleColor.White;
       Console.WriteLine();
       for (int i = 0; i < pozycjeMenu.Length; i++)
       {
         if (i == aktywnaPozycjaMenu)
         {
-          Console.BackgroundColor = ConsoleColor.White;
+          Console.BackgroundColor = ConsoleColor.DarkGray;
           Console.ForegroundColor = ConsoleColor.Black;
-          Console.WriteLine("⚔️  {0,-10} ", pozycjeMenu[i], pozycjeMenu[i].Length);
+          Console.WriteLine("\t⚔️  {0,-10} ", pozycjeMenu[i], pozycjeMenu[i].Length);
           Console.BackgroundColor = ConsoleColor.Black;
           Console.ForegroundColor = ConsoleColor.White;
         }
         else
         {
-          Console.WriteLine(pozycjeMenu[i]);
+          Console.WriteLine("\t" + pozycjeMenu[i]);
         }
       }
     }
@@ -182,11 +278,6 @@ namespace projekt
         {
           aktywnaPozycjaMenu = (aktywnaPozycjaMenu + 1) % pozycjeMenu.Length;
           PokazMenu(aktywnaPozycjaMenu, pozycjeMenu, tutorial);
-        }
-        else if (klawisz.Key == ConsoleKey.Escape)
-        {
-          aktywnaPozycjaMenu = pozycjeMenu.Length - 1;
-          break;
         }
         else if (klawisz.Key == ConsoleKey.Enter)
         {
