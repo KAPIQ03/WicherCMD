@@ -6,9 +6,12 @@ public class Hero
 {
   public string? Name;
   public int Strength;
+  public int StrengthLvl;
   public int Speed;
   public int Magic;
+  public int MagicLvl;
   public int Alchemy;
+  public int AlchemyLvl;
   public int HP;
   public int XP;
   public int Gold;
@@ -18,15 +21,19 @@ public class Hero
   public Hero(JObject load)
   {
     JObject Load = load;
-    Init((int)Load["Strength"], (int)Load["Speed"], (int)Load["Magic"], (int)Load["Alchemy"], (int)Load["HP"], (int)Load["XP"], (int)Load["Gold"], (int)Load["Level"], (int)Load["Storage"], (string)Load["Name"]);
+    Init((int)Load["StrengthLvl"], (int)Load["Speed"], (int)Load["MagicLvl"], (int)Load["AlchemyLvl"], (int)Load["HP"], (int)Load["XP"], (int)Load["Gold"], (int)Load["Level"], (int)Load["Storage"], (string)Load["Name"]);
   }
   private void Init(int strength, int speed, int magic, int alchemy, int hp, int xp, int gold, int level, int storage, string name)
   {
     this.Name = name;
-    this.Strength = strength;
+    if (strength >= 2 && strength < 5)
+    {
+      this.Strength = 10;
+    }
+    this.StrengthLvl = strength;
     this.Speed = speed;
-    this.Magic = magic;
-    this.Alchemy = alchemy;
+    this.MagicLvl = magic;
+    this.AlchemyLvl = alchemy;
     this.HP = hp;
     this.XP = xp;
     this.Gold = gold;
@@ -40,10 +47,10 @@ public class Hero
   public static void Save(JObject hero, Hero hero1)
   {
     JObject Hero = hero;
-    Hero["Strength"] = hero1.Strength;
+    Hero["StrengthLvl"] = hero1.StrengthLvl;
     Hero["Speed"] = hero1.Speed;
-    Hero["Magic"] = hero1.Magic;
-    Hero["Alchemy"] = hero1.Alchemy;
+    Hero["MagicLvl"] = hero1.MagicLvl;
+    Hero["AlchemyLvl"] = hero1.AlchemyLvl;
     Hero["HP"] = hero1.HP;
     Hero["XP"] = hero1.XP;
     Hero["Storage"] = hero1.Storage;

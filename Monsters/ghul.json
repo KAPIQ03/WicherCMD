@@ -1,6 +1,6 @@
 {
 	"Name": "Ghul",
-	"Speed": 2,
-	"Strength": 1,
+	"Speed": 3,
+	"Strength": 10,
 	"HP": 60
 }

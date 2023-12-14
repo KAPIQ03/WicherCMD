@@ -1,9 +1,9 @@
 {
 	"Name": "",
 	"Speed": 2,
-	"Strength": 2,
-	"Magic": 2,
-	"Alchemy": 2,
+	"StrengthLvl": 2,
+	"MagicLvl": 2,
+	"AlchemyLvl": 2,
 	"HP": 100,
 	"XP": 0,
 	"Storage": 10,
