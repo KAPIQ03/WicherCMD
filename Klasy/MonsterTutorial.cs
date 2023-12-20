@@ -4,6 +4,15 @@ using Gra.Klasy;
 using System.Runtime.CompilerServices;
 namespace Gra.Klasy;
 
+//TODO
+/*
+- Możliwość przegrania Walki
+- Naprawa Turowści rozgrywki
+- System użycia eliksiru
+- System rzucania znaku
+- Bardziej randomowe ataki wiedźmina
+*/
+
 public class MonsterTutorial
 {
   public string? Name;
@@ -16,7 +25,7 @@ public class MonsterTutorial
   private int turyEliksir = 1;
   private int tury = 0;
   private bool wyjscieGracz = true;
-  private string[] pozycjeMenu = { "Atak (urzycie spowoduje zaatakowanie wroga)", "Znak (urzycie aktualnie posiadanego zanku)", "Eliksir (urzycie aktualnie używanego Eliksiru)", "Ucieczka (Próba wyjścia z Walki niedostępna w samouczku)" };
+  private string[] pozycjeMenu = { "Atak (użycie spowoduje zaatakowanie wroga)", "Znak (użycie aktualnie posiadanego zanku)", "Eliksir (użycie aktualnie używanego Eliksiru)", "Ucieczka (Próba wyjścia z Walki niedostępna w samouczku)" };
 
   private Hero hero;
 
