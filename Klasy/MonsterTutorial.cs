@@ -7,10 +7,7 @@ namespace Gra.Klasy;
 //TODO
 /*
 - Możliwość przegrania Walki
-- Naprawa Turowści rozgrywki
-- System użycia eliksiru
 - System rzucania znaku
-- Bardziej randomowe ataki wiedźmina
 */
 
 public class MonsterTutorial
@@ -20,10 +17,14 @@ public class MonsterTutorial
   public int Speed;
   public int HP;
   public int CloneHP;
+  private int speedMove;
   private int aktywnaPozycjaMenu = 0;
-  private int turyZnak = 0;
-  private int turyEliksir = 1;
+  private bool EliksirUse = false;
   private int tury = 0;
+  private int turyZnak = 0;
+  private int turyZnakUse = 0;
+  private bool znakUse = false;
+
   private bool wyjscieGracz = true;
   private string[] pozycjeMenu = { "Atak (użycie spowoduje zaatakowanie wroga)", "Znak (użycie aktualnie posiadanego zanku)", "Eliksir (użycie aktualnie używanego Eliksiru)", "Ucieczka (Próba wyjścia z Walki niedostępna w samouczku)" };
 
@@ -32,6 +33,7 @@ public class MonsterTutorial
   public MonsterTutorial(Hero heroArgs)
   {
     hero = heroArgs;
+    speedMove = hero.Speed;
     string data = File.ReadAllText($"./Monsters/ghul.json");
     JObject load = JObject.Parse(data);
     Init((int)load["Strength"], (int)load["Speed"], (int)load["HP"], (string)load["Name"]);
@@ -46,26 +48,40 @@ public class MonsterTutorial
   }
   public void Walka()
   {
+    if (speedMove > Speed)
+    {
+      RuchGracz();
+      RuchPrzeciwnik();
+    }
+    else
+    {
+      if (tury == 0)
+      {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine("Przeciwnik jest od Ciebie szybszy i atakuje jako pierwszy");
+        Console.ReadKey();
+      }
+      RuchPrzeciwnik();
+      RuchGracz();
+    }
     Console.CursorVisible = false;
     while ((HP > 0) && (CloneHP > 0))
     {
-      if (hero.Speed > Speed)
+      if (EliksirUse)
       {
-        RuchGracz();
-        RuchPrzeciwnik();
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine("Eliksir Jaskółka przywraca Ci 2pkt HP");
+        Console.ReadKey();
+        Console.ForegroundColor = ConsoleColor.White;
+        CloneHP += 2;
       }
-      else
+      if (turyZnakUse == 2)
       {
-        if (tury == 0)
-        {
-          Console.Clear();
-          Console.ForegroundColor = ConsoleColor.DarkGray;
-          Console.WriteLine("Przeciwnik jest od Ciebie szybszy i atakuje jako pierwszy");
-          Console.ReadKey();
-        }
-        RuchPrzeciwnik();
-        RuchGracz();
+        znakUse = false;
       }
+      RuchGracz();
     }
   }
   private void RuchGracz()
@@ -73,6 +89,7 @@ public class MonsterTutorial
     wyjscieGracz = true;
     while (wyjscieGracz)
     {
+      turyZnak = turyZnak < 0 ? 3 : turyZnak;
       PokazMenu();
       WybieranieOpcji();
       UruchomOpcje();
@@ -92,11 +109,11 @@ public class MonsterTutorial
       }
       else if (atak > 0 && atak < 5)
       {
-        Console.WriteLine($"Potwór szykuje się do skoku w Twoją stronę, w ostatniej chwili zauważasz to i próbujesz się uchylić. Potworowi udaje się zahaczyć Cię pazurami.\n\nOtrzymujesz {atak} obrażeń");
+        Console.WriteLine($"Potwór szykuje się do skoku w Twoją stronę, w ostatniej chwili zauważasz to i próbujesz się uchylić. Potworowi udaje się zahaczyć Cię pazurami.\n\nOtrzymujesz {atak}pkt obrażeń");
       }
       else
       {
-        Console.WriteLine($"Potwór rzuca się na Ciebie! Niestety jest szybszy i rani Cię.\n\nOtrzymujesz {atak} obrażeń");
+        Console.WriteLine($"Potwór rzuca się na Ciebie! Niestety jest szybszy i rani Cię.\n\nOtrzymujesz {atak}pkt obrażeń");
       }
       CloneHP = CloneHP - atak;
 
@@ -164,8 +181,8 @@ public class MonsterTutorial
     switch (aktywnaPozycjaMenu)
     {
       case 0: Atak(); break;
-      case 1: Znak(); wyjscieGracz = false; turyZnak++; ; break;
-      case 2: Eliksir(); wyjscieGracz = false; break;
+      case 1: Znak(); break;
+      case 2: Eliksir(); break;
       case 3: break;
     }
     return true;
@@ -238,29 +255,118 @@ public class MonsterTutorial
   }
   private bool UruchomOpcjeAtaku(int aktywnaPozycjaAtaku)
   {
+    Random rnd = new Random();
+    int max;
+    int min;
     switch (aktywnaPozycjaAtaku)
     {
       case 0:
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Blue;
-        int atakS = (int)(hero.Strength * Math.Round((2.0 / 3.0), 2));
-        Console.WriteLine($"Atak Szybki: {atakS}");
-        HP -= atakS;
+
+        min = hero.Strength - (int)Math.Floor(hero.Strength * 0.70);
+        max = (int)Math.Floor(hero.Strength * 0.66);
+        int atakS = min + (rnd.Next() % (max + 1 - min));
+        speedMove = (int)Math.Round(hero.Speed * 1.20, 2);
+        if (speedMove > Speed)
+        {
+          Console.ForegroundColor = ConsoleColor.Blue;
+          Console.WriteLine($"Zadajesz przeciwnikowi {atakS}pkt obrazeń");
+          HP -= atakS;
+          Console.ReadKey();
+          if (!znakUse)
+          {
+            RuchPrzeciwnik();
+          }
+          else
+          {
+            Console.Clear();
+            Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ReadKey();
+          }
+        }
+        else
+        {
+          if (!znakUse)
+          {
+            RuchPrzeciwnik();
+          }
+          else
+          {
+            Console.Clear();
+            Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ReadKey();
+          }
+          Console.Clear();
+          Console.ForegroundColor = ConsoleColor.Blue;
+          Console.WriteLine($"Zadajesz przeciwnikowi {atakS}pkt obrazeń");
+          HP -= atakS;
+          Console.ReadKey();
+        }
         Console.ForegroundColor = ConsoleColor.White;
         tury++;
-        Console.ReadKey();
+        if (znakUse)
+        {
+          turyZnakUse++;
+        }
+        else
+        {
+          turyZnak++;
+        }
         wyjscieGracz = false;
         break;
       case 1:
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Blue;
-        int atakW = hero.Strength + (int)(hero.Strength * Math.Round((1.0 / 3.0), 2));
-        Console.WriteLine($"Atak Wolny: {atakW}");
-        hero.Speed = hero.Speed - (hero.Speed * (1 / 3));//Naprawienie Sppeda przy szybkich atakach;
-        HP -= atakW;
+        min = hero.Strength - (int)Math.Floor(hero.Strength * 0.30);
+        max = (int)Math.Floor(hero.Strength * 1.33);
+        int atakW = min + (rnd.Next() % (max + 1 - min));
+        speedMove = (int)Math.Round(hero.Speed * 0.66, 2);
+
+        if (speedMove > Speed)
+        {
+          Console.ForegroundColor = ConsoleColor.Blue;
+          Console.WriteLine($"Zadajesz przeciwnikowi {atakW}pkt obrazeń");
+          HP -= atakW;
+          Console.ReadKey();
+          if (!znakUse)
+          {
+            RuchPrzeciwnik();
+          }
+          else
+          {
+            Console.Clear();
+            Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ReadKey();
+          }
+        }
+        else
+        {
+          if (!znakUse)
+          {
+            RuchPrzeciwnik();
+          }
+          else
+          {
+            Console.Clear();
+            Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ReadKey();
+          }
+          Console.Clear();
+          Console.ForegroundColor = ConsoleColor.Blue;
+          Console.WriteLine($"Zadajesz przeciwnikowi {atakW}pkt obrazeń");
+          HP -= atakW;
+          Console.ReadKey();
+        }
         Console.ForegroundColor = ConsoleColor.White;
         tury++;
-        Console.ReadKey();
+        if (znakUse)
+        {
+          turyZnakUse++;
+        }
+        else
+        {
+          turyZnak++;
+        }
         wyjscieGracz = false;
         break;
       case 2: return false;
@@ -272,14 +378,25 @@ public class MonsterTutorial
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Blue;
     string text;
-    if (turyZnak % 3 == 0)
+    if (znakUse)
     {
-      text = "Używasz: Yrden\nPrzeciwnik nie może się ruszyć (do następnej tury)";
-      tury++;
+      text = "Zaklęcie jeszcze trwa";
     }
     else
     {
-      text = $"Następne użycie dopiero za {3 - (turyZnak % 3)} tury";
+      if (turyZnak >= 3)
+      {
+        text = "Używasz: Yrden\nPrzeciwnik nie może się ruszyć (przez 2 tury)";
+        tury++;
+        wyjscieGracz = false;
+        turyZnak = 0;
+        turyZnakUse = 0;
+        znakUse = true;
+      }
+      else
+      {
+        text = $"Użycie znaku dostępne dopiero za {3 - turyZnak} tury";
+      }
     }
     Console.WriteLine(text);
     Console.ForegroundColor = ConsoleColor.White;
@@ -289,11 +406,20 @@ public class MonsterTutorial
   {
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Blue;
-    if (turyEliksir == 1)
+    if (!EliksirUse)
     {
       Console.WriteLine("Używasz Eliksiru: Jaskółka (Odnawia 2HP co rundę)");
-      turyEliksir--;
       tury++;
+      EliksirUse = true;
+      wyjscieGracz = false;
+      if (znakUse)
+      {
+        turyZnakUse++;
+      }
+      else
+      {
+        turyZnak++;
+      }
     }
     else
     {

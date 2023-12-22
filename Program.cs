@@ -28,6 +28,7 @@ namespace projekt
     }
     public static void NewGame(Hero hero)
     {
+      Console.ForegroundColor = ConsoleColor.White;
       Console.Clear();
       Console.WriteLine("Jak masz na imię podróżniku?");
       Console.Write("-> ");
