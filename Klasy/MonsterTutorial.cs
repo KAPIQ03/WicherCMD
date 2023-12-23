@@ -4,12 +4,6 @@ using Gra.Klasy;
 using System.Runtime.CompilerServices;
 namespace Gra.Klasy;
 
-//TODO
-/*
-- Możliwość przegrania Walki
-- System rzucania znaku
-*/
-
 public class MonsterTutorial
 {
   public string? Name;
@@ -24,10 +18,8 @@ public class MonsterTutorial
   private int turyZnak = 0;
   private int turyZnakUse = 0;
   private bool znakUse = false;
-
   private bool wyjscieGracz = true;
   private string[] pozycjeMenu = { "Atak (użycie spowoduje zaatakowanie wroga)", "Znak (użycie aktualnie posiadanego zanku)", "Eliksir (użycie aktualnie używanego Eliksiru)", "Ucieczka (Próba wyjścia z Walki niedostępna w samouczku)" };
-
   private Hero hero;
 
   public MonsterTutorial(Hero heroArgs)
@@ -51,7 +43,6 @@ public class MonsterTutorial
     if (speedMove > Speed)
     {
       RuchGracz();
-      RuchPrzeciwnik();
     }
     else
     {
@@ -63,7 +54,6 @@ public class MonsterTutorial
         Console.ReadKey();
       }
       RuchPrzeciwnik();
-      RuchGracz();
     }
     Console.CursorVisible = false;
     while ((HP > 0) && (CloneHP > 0))
@@ -280,7 +270,9 @@ public class MonsterTutorial
           else
           {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.ReadKey();
           }
         }
@@ -293,7 +285,9 @@ public class MonsterTutorial
           else
           {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.ReadKey();
           }
           Console.Clear();
@@ -335,7 +329,9 @@ public class MonsterTutorial
           else
           {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.ReadKey();
           }
         }
@@ -348,7 +344,9 @@ public class MonsterTutorial
           else
           {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("Przeciwnik nie może się ruszyć!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.ReadKey();
           }
           Console.Clear();
@@ -377,16 +375,19 @@ public class MonsterTutorial
   {
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Blue;
-    string text;
     if (znakUse)
     {
-      text = "Zaklęcie jeszcze trwa";
+      Console.WriteLine("Zaklęcie jeszcze trwa");
     }
     else
     {
       if (turyZnak >= 3)
       {
-        text = "Używasz: Yrden\nPrzeciwnik nie może się ruszyć (przez 2 tury)";
+        Console.Write("Używasz: ");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.Write("Yrden");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("\nPrzeciwnik nie może się ruszyć(przez 2 tury)");
         tury++;
         wyjscieGracz = false;
         turyZnak = 0;
@@ -395,10 +396,9 @@ public class MonsterTutorial
       }
       else
       {
-        text = $"Użycie znaku dostępne dopiero za {3 - turyZnak} tury";
+        Console.WriteLine($"Użycie znaku dostępne dopiero za {3 - turyZnak} tury");
       }
     }
-    Console.WriteLine(text);
     Console.ForegroundColor = ConsoleColor.White;
     Console.ReadKey();
   }

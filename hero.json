@@ -1,12 +1,13 @@
 {
-	"Name": "",
-	"Speed": 2,
-	"StrengthLvl": 2,
-	"MagicLvl": 2,
-	"AlchemyLvl": 2,
-	"HP": 100,
-	"XP": 0,
-	"Storage": 10,
-	"Gold": 10,
-	"Level": 1
+  "Name": "",
+  "Speed": 2,
+  "StrengthLvl": 2,
+  "MagicLvl": 2,
+  "AlchemyLvl": 2,
+  "HP": 100,
+  "XP": 0,
+  "Storage": 10,
+  "Gold": 10,
+  "Level": 1,
+  "MonsterKill": 0
 }
