@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+91ec07a8c57d8a92156084991470dc1502aa04b9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf08f210955e87ce8c908a9b1efd6be755414fee")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

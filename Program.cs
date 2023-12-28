@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using Gra.Klasy;
 using Newtonsoft.Json;
@@ -22,27 +23,49 @@ namespace projekt
       Console.CursorVisible = false;
       if (hero.Name != "")
       {
-        LoadGame(hero);
+        LoadGame(hero, load);
         if (!hero.isAlive)
         {
-          Narrator("Umierasz. Następna gra rozpocznie się od nowa");
+          Narrator("Następna gra rozpocznie się od nowa");
+
+          StreamWriter sw = new StreamWriter("./hero.txt");
+          sw.WriteLine($"{hero.Name}");
+          sw.Close();
+
           hero.Death();
-          Hero.Save(load, hero);
+          hero.Save(load);
+
         }
         else
         {
-          Hero.Save(load, hero);
+          hero.Save(load);
           Narrator("Pomyślnie zapisano stan gry");
         }
       }
-      //TODO: SYSTEM WALKI
     }
     public static void NewGame(Hero hero)
     {
-      Console.ForegroundColor = ConsoleColor.White;
+      Console.CursorVisible = false;
+      Narrator("Kolejną godzinę siedzisz w karczmie i powoli sączysz kolejne, mocno zaprawione wodą piwo. Stół lepi się od brudu, karczmarz łypie na Ciebie spode łba.");
+      Narrator("To tylko kolejny przystanek na Twojej drodze po opuszczeniu Siedliszcza.\nWydawałoby się, że świat pełen jest potworów,jednak na razie nie natknąłeś się na żadnego z nich.\nByć może tym razem ktoś się do Ciebie zwróci?");
+
+      String line;
+      StreamReader sr = new StreamReader("./hero.txt");
+      line = sr.ReadLine();
+      sr.Close();
+
+      Narrator($"Wyciągasz na wierzch koszuli swój medalion.\nMoże to zwróci uwagę potencjalnego klienta. Oby się ktoś znalazł bo w sakiewce nie został Ci już ani jeden grosz.\nWtapiasz wzrok w stółna którym ktoś wyrył swoje imię \"{line}\". ");
+      Narrator("Czujesz że ktoś łapie Cię za ramię.");
+
+      File.Delete("./hero.txt");
+
+      NPC("Przepraszam najmocniej, nie widziałem Pana nigdy w mojej wsi.\n\tNazwyam się Bolko. Jestem sołtysem tej wioski.\n\tA Wy kim jesteście?", "???");
+
       Console.Clear();
-      Console.WriteLine("Jak Ciebie wołają odmieńcze?");
-      Console.Write("-> ");
+      Console.CursorVisible = true;
+      Console.ForegroundColor = ConsoleColor.White;
+      Console.WriteLine("\nWprowadź swoje imie: ");
+      Console.Write("\n-> ");
       string? nazwa = Console.ReadLine();
       hero.Name = (nazwa.Length >= 1) ? nazwa : "Wiedźmin";
       int pktStart = 3;
@@ -64,15 +87,18 @@ namespace projekt
           default: Console.WriteLine("\nW waszym cechu nie uczą liczyć do 4?"); Console.ReadKey(); break;
         }
         Console.Clear();
-        Console.WriteLine($"Rozdziel punkty umiejętności: {pktStart}/3");
+        Console.WriteLine($"Rozdziel punkty umiejętności wpisując liczbę i klikając ENTER): {pktStart}/3");
         Console.WriteLine($"1. Siła {hero.StrengthLvl}\n2. Szybkość {hero.Speed}\n3. Magia {hero.MagicLvl}\n4. Alchemia {hero.AlchemyLvl}\n");
         if (pktStart > 0) Console.Write("-> ");
       }
       Console.WriteLine("Aby kontynuować wciśnij przycisk.");
       Console.ReadKey();
-
       Console.Clear();
-      string tutorial = $"Wieśniak:\n\n\tWitaj {hero.Name},\n\tW naszej wiosce zalęgły się ghule, czy mógłbyś się ich pozbyć? (Samouczek)";
+
+      Console.CursorVisible = false;
+      Gracz($"Jestem {hero.Name}, jestem wiedźminem");
+
+      string tutorial = $"Balko:\n\n\tAaa pan wiedźmin! Jak to dobrze żeście tu trafili. Mamy problem z Ghulami. Pomoglibyście?";
 
       MenuDialog menuDialog = new MenuDialog();
       bool wybor = menuDialog.Wybor(tutorial);
@@ -80,35 +106,36 @@ namespace projekt
       if (wybor)
       {
         MonsterTutorial ghul = new MonsterTutorial(hero);
-        NPC("W takim razie chodź za mną... ", "Wieśniak");
-        Narrator("Wieśniak prowadzi Cię do stodoły na skraju wsi.");
+        NPC("W takim razie chodź za mną... ", "Balko");
+        Narrator("Balko prowadzi Cię do stodoły na skraju wsi.");
         Gracz("Zajmę się tym. Schowaj się w jakiejś chacie i ostrzeż ludzi.");
-        Narrator("Wieśniak kiwa głową i odchodzi.\nOstrożnie obchodzisz stodołę, w hałdzie gnoju za nią widać niewielkie gniazdo, w którym siedzi jeden Ghul.");
+        Narrator("Sołtys kiwa głową i odchodzi.\nOstrożnie obchodzisz stodołę, w hałdzie gnoju za nią widać niewielkie gniazdo, w którym siedzi jeden Ghul.");
         Narrator("Widzisz jak potwór podnosi łeb i wietrzy Twój zapach. Susem wyskakuje z gniazda i zaczyna się do Ciebie zbliżać.\nSięgasz po miecz...");
         ghul.Walka();
         Narrator("Potwór pada na ziemię i lekko tylko drga.\nDobijasz go zdecydowanym ruchem.");
-        Narrator("Wychodzisz przed stodołę i wołasz wieśniaka. Widzisz go, jak wychodzi z sąsiedniej chaty.");
+        Narrator("Wychodzisz przed stodołę i wołasz sołtysa. Widzisz go, jak wychodzi z sąsiedniej chaty.");
         Gracz("Załatwiłem tego ghula. Pamiętajcie, aby spalić jego truchło i gniazdo. ");
-        NPC("Oczywiście panie wiedźmin. Dziękujemy za pomoc. Oto pieniądze. Złożyliśmy się całą wsią na tego ghula. ", "Wieśniak");
-        Narrator("Oczywiście panie wiedźmin. Dziękujemy za pomoc. Oto pieniądze. Złożyliśmy się całą wsią na tego ghula. ");
+        NPC("Oczywiście panie wiedźmin. Dziękujemy za pomoc. Oto pieniądze. Złożyliśmy się całą wsią na tego ghula. ", "Balko");
+        Narrator("Wieśniak podaje Ci sakiewkę. Zaglądasz do środka - jest w niej 100 monet. ");
         Gracz("Mhm... Bywajcie.");
-        Narrator("Wieśniak kiwa Ci głową na pożegnanie i odchodzi. Pora, aby ruszać w dalszą drogę. ");
-        Narrator("Ukończyłeś samouczek! Powodzenia na szlaku.");
+        Narrator("Balko kiwa Ci głową na pożegnanie i odchodzi. Pora, aby ruszać w dalszą drogę. ");
+        Narrator("Ukończyłeś samouczek!");
       }
       else
       {
-        NPC("Ah tak..\n\tTo wynoś się z naszej wioski na szlak odmieńcze!", "Wieśniak");
+        NPC("Ah tak..\n\tW takim razie nie ma tu dla was miejsca! Wynoście się stąd!", "Balko");
+        Narrator("Spokojny i opanowany wychodzisz z karczmy i ruszasz w dalszą drogę. Wiesz że po drodze spotaksz wiele niebezpicznych stworzeń z którymi przyjdzie Ci się zmierzyć.");
       }
-      Narrator("Wyruszasz teraz w samotną drogę gdzie spotaksz wiele niebezpicznych stworzeń z którymi przyjdzie Ci się zmierzyć.");
+
     }
-    public static void LoadGame(Hero hero)
+    public static void LoadGame(Hero hero, JObject load)
     {
       Narrator("Witaj na szlaku! Pokonaj jak najwięcej potworów i nie daj się zabić. Powodzenia!");
       bool wyjscie = false;
 
       while (!wyjscie)
       {
-        wyjscie = MenuNaSzlaku(hero);
+        wyjscie = MenuNaSzlaku(hero, load);
       }
     }
     public static void NPC(string text, string nazwa)
@@ -135,16 +162,18 @@ namespace projekt
       Console.ForegroundColor = ConsoleColor.White;
       Console.ReadKey();
     }
-    public static bool MenuNaSzlaku(Hero hero)
+    public static bool MenuNaSzlaku(Hero hero, JObject load)
     {
       bool wyjscieGracz = true;
       int aktywnaPozycjaMenu = 0;
-      string[] pozycjeMenu = { "Walka", "Znaki", "Eliksiry", "Zapisz stan gry (WYJŚĆIE)" };
+      string[] pozycjeMenu = { "Walka", "Znaki", "Eliksiry", "WYJŚĆIE" };
       while (wyjscieGracz)
       {
+        hero.Refresh();
         PokazMenu(aktywnaPozycjaMenu, pozycjeMenu, hero);
         aktywnaPozycjaMenu = WybieranieOpcji(aktywnaPozycjaMenu, pozycjeMenu, hero);
         wyjscieGracz = UruchomOpcje(aktywnaPozycjaMenu, hero);
+        hero.Save(load);
       }
       return true;
     }
@@ -153,8 +182,12 @@ namespace projekt
       Console.BackgroundColor = ConsoleColor.Black;
       Console.Clear();
       Console.ForegroundColor = ConsoleColor.White;
-      Console.WriteLine($"Na Szlaku\tPokonane potwory: {hero.MonsterKill}");
+      Console.WriteLine($"\nImie: {hero.Name} | Lvl: {hero.Level} | HP: {hero.HP}\n");
+      Console.ForegroundColor = ConsoleColor.DarkGreen;
+      Console.WriteLine($"\t~ Witaj na Wiedźmińskim Szlaku ~");
+      Console.ForegroundColor = ConsoleColor.White;
       Console.WriteLine();
+
       for (int i = 0; i < pozycjeMenu.Length; i++)
       {
         if (i == aktywnaPozycjaMenu)
@@ -170,7 +203,13 @@ namespace projekt
           Console.WriteLine("\t" + pozycjeMenu[i]);
         }
       }
-      ;
+      Console.ForegroundColor = ConsoleColor.DarkBlue;
+      Console.Write($"\nPokonane potwory: {hero.MonsterKill}");
+      Console.ForegroundColor = ConsoleColor.Magenta;
+      Console.Write($"\tZnak: {hero.znaki[hero.SelectedSign]}");
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      Console.Write($"\tEliksir: {hero.eliksiry[hero.SelectedPotion]}");
+      Console.ForegroundColor = ConsoleColor.White;
     }
     public static int WybieranieOpcji(int aktywnaPozycjaMenu, string[] pozycjeMenu, Hero hero)
     {
@@ -196,23 +235,29 @@ namespace projekt
     }
     public static bool UruchomOpcje(int aktywnaPozycjaMenu, Hero hero)
     {
+      string text;
       switch (aktywnaPozycjaMenu)
       {
         case 0:
           Random rnd = new Random();
-          string[] monsters = { "ghul", "utopiec", "baba_wodna", "nekker", "wampir", "syrena", "arachnomorf", "kikimora", "leszy", "strzyga", "bies" };
-          int random = rnd.Next() % monsters.Length;
-          Monster monster = new Monster(monsters[random], hero);
+          // string[] monsters = { "ghul", "utopiec", "baba_wodna", "nekker", "wampir", "syrena", "arachnomorf", "kikimora", "leszy", "strzyga", "bies" };
+          int random = rnd.Next() % hero.monsters.Count;
+          Monster monster = new Monster(hero.monsters[random], hero);
           if (monster.Walka())
           {
             return false;
           }
-          else
-          {
-            return true;
-          }
-        case 1:; break;
-        case 2:; break;
+          break;
+        case 1:
+          text = "Wybierz znak z którego będziesz kożystać w walce";
+          MenuOption menuZnak = new MenuOption(hero.SelectedSign, hero.znaki, hero, hero.znakiDesc);
+          hero.SelectedSign = menuZnak.Wybor(text);
+          break;
+        case 2:
+          text = "Wybierz Eliksir z którego będziesz kożystać w walce";
+          MenuOption menuEliksiry = new MenuOption(hero.SelectedPotion, hero.eliksiry, hero, hero.eliksiryDesc);
+          hero.SelectedPotion = menuEliksiry.Wybor(text);
+          break;
         case 3: return false;
       }
       return true;
@@ -227,10 +272,9 @@ namespace projekt
 //   "StrengthLvl": 2,
 //   "MagicLvl": 2,
 //   "AlchemyLvl": 2,
-//   "HP": 100,
 //   "XP": 0,
-//   "Storage": 10,
-//   "Gold": 10,
 //   "Level": 1,
-//   "MonsterKill":0
+//   "MonsterKill":0,
+//   "SelectedSign": 0,
+//   "SelectedPotion": 0
 // }

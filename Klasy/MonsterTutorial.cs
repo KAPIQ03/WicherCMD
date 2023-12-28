@@ -55,7 +55,6 @@ public class MonsterTutorial
       }
       RuchPrzeciwnik();
     }
-    Console.CursorVisible = false;
     while ((HP > 0) && (CloneHP > 0))
     {
       if (EliksirUse)
@@ -65,9 +64,9 @@ public class MonsterTutorial
         Console.WriteLine("Eliksir Jaskółka przywraca Ci 2pkt HP");
         Console.ReadKey();
         Console.ForegroundColor = ConsoleColor.White;
-        CloneHP += 2;
+        CloneHP += 5;
       }
-      if (turyZnakUse == 2)
+      if (turyZnakUse == 1)
       {
         znakUse = false;
       }
@@ -387,7 +386,7 @@ public class MonsterTutorial
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write("Yrden");
         Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("\nPrzeciwnik nie może się ruszyć(przez 2 tury)");
+        Console.WriteLine("\nPrzeciwnik nie może się ruszyć(przez 1 tury)");
         tury++;
         wyjscieGracz = false;
         turyZnak = 0;
@@ -408,7 +407,7 @@ public class MonsterTutorial
     Console.ForegroundColor = ConsoleColor.Blue;
     if (!EliksirUse)
     {
-      Console.WriteLine("Używasz Eliksiru: Jaskółka (Odnawia 2HP co rundę)");
+      Console.WriteLine("Używasz Eliksiru: Jaskółka (Odnawia 5HP co rundę)");
       tury++;
       EliksirUse = true;
       wyjscieGracz = false;
