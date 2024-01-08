@@ -1,12 +1,12 @@
 {
-  "Name": "",
-  "Speed": 2,
-  "StrengthLvl": 2,
-  "MagicLvl": 2,
-  "AlchemyLvl": 2,
+  "Name": "Martyna",
+  "Speed": 3,
+  "StrengthLvl": 4,
+  "MagicLvl": 4,
+  "AlchemyLvl": 3,
   "XP": 0,
-  "Level": 1,
-  "MonsterKill": 0,
+  "Level": 2,
+  "MonsterKill": 1,
   "SelectedSign": 0,
   "SelectedPotion": 0
 }

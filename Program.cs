@@ -28,7 +28,9 @@ namespace projekt
         {
           Narrator("Następna gra rozpocznie się od nowa");
 
+          File.Delete("./hero.txt");
           StreamWriter sw = new StreamWriter("./hero.txt");
+
           sw.WriteLine($"{hero.Name}");
           sw.Close();
 
@@ -56,8 +58,6 @@ namespace projekt
 
       Narrator($"Wyciągasz na wierzch koszuli swój medalion.\nMoże to zwróci uwagę potencjalnego klienta. Oby się ktoś znalazł bo w sakiewce nie został Ci już ani jeden grosz.\nWtapiasz wzrok w stółna którym ktoś wyrył swoje imię \"{line}\". ");
       Narrator("Czujesz że ktoś łapie Cię za ramię.");
-
-      File.Delete("./hero.txt");
 
       NPC("Przepraszam najmocniej, nie widziałem Pana nigdy w mojej wsi.\n\tNazwyam się Bolko. Jestem sołtysem tej wioski.\n\tA Wy kim jesteście?", "???");
 

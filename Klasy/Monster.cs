@@ -95,6 +95,10 @@ public class Monster
         znakUse = false;
       }
       RuchGracz();
+      if ((HP <= 0) && (CloneHPGracz <= 0))
+      {
+        break;
+      }
     }
     if (HP <= 0)
     {

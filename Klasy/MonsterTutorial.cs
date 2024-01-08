@@ -61,7 +61,7 @@ public class MonsterTutorial
       {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine("Eliksir Jaskółka przywraca Ci 2pkt HP");
+        Console.WriteLine("Eliksir Jaskółka przywraca Ci 5HP");
         Console.ReadKey();
         Console.ForegroundColor = ConsoleColor.White;
         CloneHP += 5;
